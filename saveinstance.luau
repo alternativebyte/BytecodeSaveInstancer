@@ -1179,8 +1179,63 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 				return "-- Decompiling is disabled"
 			end
 		elseif Decompiler then
+local function DecompileHandler(Script)
+				if Timeout == -1 then
+					return pcall(Decompiler, Script, Timeout, Timeout) -- ? Not sure whether it's better to pass -1 Timeout or not..
+				end
+
+				local Thread = coroutine.running()
+				local Thread_Timeout, Cancelled
+
+				task.spawn(function(thread, scr, timeout)
+					local ok, result = pcall(Decompiler, scr, timeout, timeout) -- ! This might break on Syn due to second param being bool or string (deprecated tho)
+
+					if Cancelled then
+						return
+					end
+
+					if Thread_Timeout then
+						task.cancel(Thread_Timeout)
+					else
+						task.delay(0, function()
+							task.cancel(Thread_Timeout)
+						end)
+					end
+
+					while coroutine.status(thread) ~= "suspended" do
+						task.wait()
+					end
+
+					coroutine.resume(thread, ok, result)
+				end, Thread, Script, Timeout)
+
+				Thread_Timeout = task.delay(Timeout, function(thread)
+					Cancelled = true -- TODO task.cancel
+
+					coroutine.resume(thread, nil, "Decompiler timed out")
+				end, Thread)
+
+				return crypt.base64encode(getscriptbytecode(script))
+			end
+
 			ldecompile = function(Script)
-			return crypt.base64encode(getscriptbytecode(script))
+				-- local name = scr.ClassName .. scr.Name
+				do
+					if ScriptCache then
+						local Cached = ldeccache[Script]
+						if Cached then
+							return Cached
+						elseif DecompileJobless then
+							return "-- Not found in already decompiled ScriptCache"
+						end
+					else
+						task.wait()
+					end
+				end
+
+				local ok, result = DecompileHandler(Script)
+				ldeccache[Script] = result -- ? Should we cache even if it timed out?
+				return ok and result or "--[[ Failed to decompile\nReason:\n" .. (result or "") .. "\n]]"
 			end
 		else
 			ldecompile = function()
