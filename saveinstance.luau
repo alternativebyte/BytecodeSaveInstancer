@@ -115,36 +115,7 @@ local CustomDecomp -- TODO Temporary
 
 if request and getscriptbytecode then
 	CustomDecomp = function(Script)
-		-- Credits @Lonegwadiwaitor
-		local bytecode = getscriptbytecode(Script)
-
-		if bytecode == "" then
-			error("Bytecode is empty")
-		end
-
-		local response = request({
-			Url = "https://.glitch.me/bytecode",
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json",
-			},
-			Body = service.HttpService:JSONEncode({
-				version = 5,
-				bytecode = Base64_Encode(bytecode),
-			}),
-		})
-
-		if response.Success == false then -- Server Issue
-			return response.StatusMessage
-		end
-
-		local decoded = service.HttpService:JSONDecode(response.Body)
-
-		if decoded.status ~= "ok" then -- r Issue
-			return decoded.status
-		end
-
-		return decoded.output
+		return crypt.base64encode(getscriptbytecode(Script))
 	end
 end
 
@@ -1215,9 +1186,8 @@ local function DecompileHandler(Script)
 					coroutine.resume(thread, nil, "Decompiler timed out")
 				end, Thread)
 
-				return crypt.base64encode(getscriptbytecode(script))
+				return coroutine.yield()
 			end
-
 			ldecompile = function(Script)
 				-- local name = scr.ClassName .. scr.Name
 				do
