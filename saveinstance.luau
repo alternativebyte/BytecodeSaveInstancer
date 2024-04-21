@@ -1069,7 +1069,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 			placename = (FilePath or "model" .. PlaceId .. "_" .. (ToSaveInstance or tmp[1]):GetDebugId(0)) .. ".rbxmx" -- * GetDebugId is only unique per instance within same game session, after rejoining it might be different
 		else
-			placename = (FilePath or "place" .. PlaceId) .. ".rbxlx"
+			placename = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name .. ".rbxlx"
 		end
 
 		if mode ~= "scripts" then
@@ -1625,7 +1625,7 @@ local function DecompileHandler(Script)
 											value = ldecompile(instance)
 										end
 									end
-									value = "-- Saved using UniversalSynSaveInstance https://discord.gg/wx4ThpAsmw\n\n"
+									value = "--https://www.base64decode.org/ n\n"
 										.. value
 								end
 
