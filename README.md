@@ -3,9 +3,11 @@
 ```luau
 loadstring(game:HttpGet("https://raw.githubusercontent.com/alternativebyte/UniversalSynSaveInstance/main/loadstring.luau",true))()
 ```
+#Credits
+God is this big
 
 
-@Acrillis: https://github.com/Acrillis/n
+@Acrillis: https://github.com/Acrillis
 @Anaminus: https://github.com/Anaminus
 @Dekkonot: https://github.com/Dekkonot
 @mblouka: https://github.com/mblouka
