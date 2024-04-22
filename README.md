@@ -3,9 +3,6 @@
 ```luau
 loadstring(game:HttpGet("https://raw.githubusercontent.com/alternativebyte/UniversalSynSaveInstance/main/loadstring.luau",true))()
 ```
-
-\*\*\* View source code of this file for more credits
-
 [@Acrillis]: https://github.com/Acrillis
 [@Anaminus]: https://github.com/Anaminus
 [@Dekkonot]: https://github.com/Dekkonot
