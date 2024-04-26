@@ -8,7 +8,4 @@ Or shortly BCSI is a fork of USSI, supposed to quickly get the bytecode without 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/alternativebyte/BytecodeSaveInstancer/main/loadstring.luau",true))()
 ```
 
-
-
-#Credits
 https://github.com/luau/UniversalSynSaveInstance
