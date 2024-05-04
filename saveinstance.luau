@@ -115,7 +115,32 @@ local CustomDecomp -- TODO Temporary
 
 if request and getscriptbytecode then
 	CustomDecomp = function(Script)
-		return crypt.base64encode(getscriptbytecode(Script))
+
+local function decompile(scr)
+    local s, bytecode = pcall(getscriptbytecode, scr)
+    if not s then
+        return `failed to get bytecode { bytecode }`
+    end
+
+    local response = request({
+        Url = 'https://unluau.lonegladiator.dev/unluau/decompile',
+        Method = 'POST',
+        Headers = {
+            ['Content-Type'] = 'application/json',
+        },
+        Body = game:GetService('HttpService'):JSONEncode({
+            version = 5,
+            bytecode = crypt.base64.encode(bytecode)
+        })
+    })
+
+    local decoded = game:GetService('HttpService'):JSONDecode(response.Body)
+    if decoded.status ~= 'ok' then
+        return `decompilation failed: { decoded.status }`
+    end
+
+    return decoded.output
+end
 	end
 end
 
